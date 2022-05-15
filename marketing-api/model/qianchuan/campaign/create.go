@@ -14,6 +14,8 @@ type CreateRequest struct {
 	CampaignName string `json:"campaign_name,omitempty"`
 	// MarketingGoal 营销目标
 	MarketingGoal enum.MarketingGoal `json:"marketing_goal,omitempty"`
+	//MarketingScene 营销场景，FEED 通投广告，SEARCH 搜索广告
+	MarketingScene enum.MarketingScene `json:"marketing_scene,omitempty"`
 	// BudgetMode 广告组预算类型
 	BudgetMode enum.BudgetMode `json:"budget_mode,omitempty"`
 	// Budget 广告组预算，取值范围: ≥ 0; 当budget_mode为"BUDGET_MODE_DAY"时,必填,且日预算不少于300	元

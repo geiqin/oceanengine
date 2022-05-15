@@ -46,6 +46,8 @@ type ListGetFiltering struct {
 	Name string `json:"name,omitempty"`
 	// MarketingGoal 广告组营销目标，允许值：VIDEO_PROM_GOODS：短视频带货、LIVE_PROM_GOODS：直播带货
 	MarketingGoal enum.MarketingGoal `json:"marketing_goal,omitempty"`
+	//MarketingScene 营销场景，FEED 通投广告，SEARCH 搜索广告
+	MarketingScene enum.MarketingScene `json:"marketing_scene,omitempty"`
 	// Status 广告组状态，允许值：ALL：所有包含已删除、ENABLE：启用、DISABLE：暂停、DELETE：已删除。不传入即默认返回“所有不包含已删除”
 	Status string `json:"status,omitempty"`
 }

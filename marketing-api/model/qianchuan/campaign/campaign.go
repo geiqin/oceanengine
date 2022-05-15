@@ -14,6 +14,8 @@ type Campaign struct {
 	BudgetMode enum.BudgetMode `json:"budget_mode,omitempty"`
 	// MarketingGoal 广告组营销目标，VIDEO_PROM_GOODS：短视频带货、LIVE_PROM_GOODS：直播带货。
 	MarketingGoal enum.MarketingGoal `json:"marketing_goal,omitempty"`
+	//MarketingScene 营销场景，FEED 通投广告，SEARCH 搜索广告
+	MarketingScene enum.MarketingScene `json:"marketing_scene,omitempty"`
 	// Status 广告组状态
 	Status string `json:"status,omitempty"`
 	// CreateDate 广告组创建日期, 格式：yyyy-mm-dd
