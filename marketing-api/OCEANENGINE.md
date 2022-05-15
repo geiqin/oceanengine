@@ -1,0 +1,283 @@
+# 巨量引擎开放平台 Golang SDK
+
+[![Go Reference](https://pkg.go.dev/badge/github.com/geiqin/oceanengine.svg)](https://pkg.go.dev/github.com/geiqin/oceanengine)
+[![Go](https://github.com/geiqin/oceanengine/actions/workflows/go.yml/badge.svg)](https://github.com/geiqin/oceanengine/actions/workflows/go.yml)
+[![goreleaser](https://github.com/geiqin/oceanengine/actions/workflows/goreleaser.yml/badge.svg)](https://github.com/geiqin/oceanengine/actions/workflows/goreleaser.yml)
+[![GitHub go.mod Go version of a Go module](https://img.shields.io/github/go-mod/go-version/bububa/oceanengine.svg)](https://github.com/geiqin/oceanengine)
+[![GoReportCard](https://goreportcard.com/badge/github.com/geiqin/oceanengine)](https://goreportcard.com/report/github.com/geiqin/oceanengine)
+[![GitHub license](https://img.shields.io/github/license/bububa/oceanengine.svg)](https://github.com/geiqin/oceanengine/blob/master/LICENSE)
+[![GitHub release](https://img.shields.io/github/release/bububa/oceanengine.svg)](https://GitHub.com/bububa/oceanengine/releases/)
+
+- Oauth2 授权 (api/oauth)
+  - 生成授权链接 [ Url(clt *core.SDKClient, redirectUrl string, state string, materialAuth bool) string ]
+  - 获取 AccessToken [ AccessToken(clt *core.SDKClient, authCode String) (*oauth.AccessTokenResponseData, error) ]
+  - 刷新 Token [ RefreshToken(clt *core.SDKClient, refreshToken string) (*oauth.AccessTokenResponseData, error)]
+  - 获取已授权账户 [ AdvertiserGet(clt \*core.SDKClient, accessToken string) ([]oauth.Advertiser, error) ]
+  - 获取授权 User 信息 [ UserInfo(clt *core.SDKClient, accessToken string) (*oauth.UserInfoResponseData, error) ]
+- 账号服务
+  - 广告主信息与资质管理 (api/advertiser)
+    - 广告主信息 [ Info(clt *core.SDKClient, accessToken string, req *advertiser.InfoRequest) ([]advertiser.Info, error) ]
+    - 广告主公开信息 [ PublicInfo(clt *core.SDKClient, accessToken string, req *advertiser.PublicInfoRequest) ([]advertiser.PublicInfo, error) ]
+    - 获取广告主头像信息 [ AvatarGet(clt *core.SDK, accessToken string, advertiserID uint64) (*advertiser.AvatarGetResponseData, error) ]
+  - 代理商账号管理 (api/agent)
+    - 广告主列表 [ AdvertiserSelect(clt *core.SDKClient, accessToken string, req *agent.AdvertiserSelectRequest) (*agent.AdvertiserSelectResponseData, error) ]
+    - 修改广告主 [ AdvertiserUpdate(clt *core.SDKClient, accessToken string, req *agent.AdvertiserUpdateRequest) (*agent.AdvertiserUpdateResponseData, error) ]
+    - 二级代理商列表 [ ChildAgentSelect(clt *core.SDKClient, accessToken string, req *agent.ChildAgentSelectRequest) ([]uint64, error) ]
+    - 获取代理商信息 [ Info(clt *core.SDKClient, accessToken string, req *agent.InfoRequest) ([]agent.Info, error) ]
+  - 账号管家管理 (api/majordomo)
+    - 广告主列表 [ MajordomoSelect(clt *core.SDKClient, accessToken string, req *majordomo.AdvertiserSelectRequest) ([]majordomo.AdvertiserSelectResponseList, error) ]
+  - 资金和流水管理 (api)
+    - 查询账号余额 [ advertiser.FundGet(clt *core.SDKClient, accessToken string, advertiserID uint64) (*advertiser.FundGetResponseData, error) ]
+    - 查询账号日流水 [ advertiser.FundDailyStat(clt *core.SDKClient, accessToken string, req *advertiser.FundDailyStatRequest) (*advertiser.FundDailyStatResponseData, error) ]
+    - 查询账号流水明细 [ advertiser.FundTransactionGet(clt *core.SDKClient, accessToken string, req *advertiser.FundTransactionGetRequest) ([]advertiser.FundTransactionGetResponseList, error) ]
+    - 代理商转账 [ agent.AdvertiserRecharge(clt *core.SDKClient, accessToken string, req *agent.AdvertiserRechargeRequest) (string, error) ]
+    - 代理商退款 [ agent.AdvertiserRefund(clt *core.SDKClient, accessToken string, req *agent.AdvertiserRefundRequest) (string, error) ]
+    - 获取共享钱包余额 [ fund.SharedWalletFundGet(clt *core.SDKClient, accessToken string, advertiserIDs []uint64) ([]fund.SharedWalletBalance, error) ]
+    - 查询账户可转余额 [ TransferableFundGet(clt *core.SDKClient, accessToken string, advertiserID uint64) (*advertiser.TransferableFund, error) ]
+- 广告投放
+  - 广告账户预算 (api)
+    - 获取账户日预算 [ advertiser.BudgetGet(clt *core.SDKClient, accessToken string, req *advertiser.BudgetGetRequest) ([]advertiser.BudgetGetResponseList, error) ]
+    - 更新账户日预算 [ advertiser.UpdateBudget(clt *core.SDKClient, accessToken string, req *advertiser.UpdateBudgetRequest) error ]
+  - 广告组 (api/campaign)
+    - 获取广告组 [ Get(clt *core.SDKClient, accessToken string, req *campaign.GetRequest) (*campaign.GetResponseData, error) ]
+    - 创建广告组 [ Create(clt *core.SDKClient, accessToken string, req *campaign.CreateRequest) (uint64, error) ]
+    - 修改广告组 [ Update(clt *core.SDKClient, accessToken string, req *campaign.UpdateRequest) (uint64, error) ]
+    - 广告组更新状态 [ UpdateStatus(clt *core.SDKClient, accessToken string, req *campaign.UpdateStatusRequest) (*campaign.UpdateResponseData, error) ]
+  - 广告计划模块 (api/ad)
+    - 创建广告计划 [ Create(clt *core.SDKClient, accessToken string, req *ad.CreateRequest) (uint64, error) ]
+    - 获取广告计划 [ Get(clt *core.SDKClient, accessToken string, req *ad.GetRequest) (*ad.GetResponseData, error) ]
+    - 修改计划 [ Update(clt *core.SDKClient, accessToken string, req *ad.UpdateRequest) (*ad.UpdateResponseData, error) ]
+    - 更新计划状态 [ UpdateStatus(clt *core.SDKClient, accessToken string, req *ad.UpdateStatusRequest) (*ad.UpdateResponseData, error) ]
+    - 更新计划预算 [ UpdateBudget(clt *core.SDKClient, accessToken string, req *ad.UpdateBudgetRequest) (*ad.UpdateResponseData, error) ]
+    - 更新计划出价 [ UpdateBid(clt *core.SDKClient, accessToken string, req *ad.UpdateBidRequest) (*ad.UpdateResponseData, error) ]
+    - 批量获取计划成本保障状态 [ CostProtectStatusGet(clt *core.SDKClient, accessToken string, req *ad.CostProtectStatusGetRequest) ([]ad.CostProtectStatus, error) ]
+    - 获取计划审核建议 [ RejectReason(clt *core.SDKClient, accessToken string, req *ad.RejectReasonRequest) ([]ad.RejectReason, error) ]
+  - 广告创意模块 (api/creative)
+    - 获取广告创意列表 [ Get(clt *core.SDKClient, accessToken string, req *creative.GetRequest) (*creative.GetResponseData, error) ]
+    - 创建自定义创意 [ CustomCreativeCreate(clt *core.SDKClient, accessToken string, req *creative.CustomCreativeCreateRequest) (*creative.CustomCreativeCreateResponseData, error) ]
+    - 修改自定义创意 [ CustomCreativeUpdate(clt *core.SDKClient, accessToken string, req *creative.CustomCreativeUpdateRequest) (*creative.CustomCreativeCreateResponseData, error) ]
+    - 创建程序化创意 [ ProceduralCreativeCreate(clt *core.SDKClient, accessToken string, req *creative.ProceduralCreativeCreateRequest) error ]
+    - 修改程序化创意 [ ProceduralCreativeUpdate(clt *core.SDKClient, accessToken string, req *creative.ProceduralCreativeUpdateRequest) error ]
+    - 创建广告创意 [ Create(clt *core.SDKClient, accessToken string, req *creative.CreateRequest) (*creative.CreateResponseData, error) ]
+    - 创意详细信息 [ Read(clt *core.SDKClient, accessToken string, req *creative.ReadRequest) (*creative.CreativeDetail, error) ]
+    - 修改创意信息 [ Update(clt *core.SDKClient, accessToken string, req *creative.UpdateRequest) (*creative.CreateResponseData, error) ]
+    - 更新创意状态 [ UpdateStatus(clt *core.SDKClient, accessToken string, req *creative.UpdateStatusRequest) (*creative.UpdateResponseData, error) ]
+    - 创意素材信息 [ MaterialRead(clt *core.SDKClient, accessToken string, req *creative.MaterialReadRequest) ([]creative.Material, error) ]
+    - 获取创意审核建议 [ RejectReason(clt *core.SDKClient, accessToken string, req *creative.RejectReasonRequest) ([]creative.RejectReason, error) ]
+- 数据报表
+  - 广告数据报表 (api/report)
+    - 广告主数据 [ AdvertiserGet(clt *core.SDKClient, accessToken string, req *report.GetRequest) (*report.GetResponseData, error) ]
+    - 广告组数据 [ CampaignGet(clt *core.SDKClient, accessToken string, req *report.GetRequest) (*report.GetResponseData, error) ]
+    - 广告计划数据 [ AdGet(clt *core.SDKClient, accessToken string, req *report.GetRequest) (*report.GetResponseData, error) ]
+    - 广告创意数据 [ CreativeGet(clt *core.SDKClient, accessToken string, req *report.GetRequest) (*report.GetResponseData, error) ]
+    - 多合一数据报表接口 [ IntegratedGet(clt *core.SDKClient, accessToken string, req *report.IntegratedRequest) (*report.IntegratedResponseData, error) ]
+    - 视频素材报表 [ VideoGet(clt *core.SDKClient, accessToken string, req *report.IntegratedRequest) (*report.IntegratedResponseData, error) ]
+    - 视频互动流失数据 [ VideoFrameGet(clt *core.SDKClient, accessToken string, req *report.VideoFrameRequest) ([]report.VideoFrameResponseDataList, error) ]
+    - 分级模糊数据 [ MistyGet(clt *core.SDKClient, accessToken string, req *report.IntegratedRequest) (*report.IntegratedResponseData, error) ]
+  - 受众分析数据报表 (api/report/audience)
+    - 行为兴趣数据 [ InterestActionList(clt *core.SDKClient, accessToken string, req *audience.ListRequest) (*audience.ListResponseData, error) ]
+    - 抖音达人数据 [ AwemeList(clt *core.SDKClient, accessToken string, req *audience.ListRequest) (*audience.ListResponseData, error) ]
+    - 省级数据 [ Province(clt *core.SDKClient, accessToken string, req *audience.Request) ([]audience.ResponseData, error) ]
+    - 市级数据 [ City(clt *core.SDKClient, accessToken string, req *audience.Request) ([]audience.ResponseData, error) ]
+    - 性别数据 [ Gender(clt *core.SDKClient, accessToken string, req *audience.Request) ([]audience.ResponseData, error) ]
+    - 兴趣数据 [ Tag(clt *core.SDKClient, accessToken string, req *audience.Request) ([]audience.ResponseData, error) ]
+    - 年龄数据 [ Age(clt *core.SDKClient, accessToken string, req *audience.Request) ([]audience.ResponseData, error) ]
+  - 电商直播数据报表 (api/report/liveroom)
+    - 直播间属性报表 [ AttributeGet(clt *core.SDKClient, accessToken string, req *liveroom.Request) (*liveroom.ResponseData, error) ]
+    - 直播间分析报表 [ AnalysisGet(clt *core.SDKClient, accessToken string, req *liveroom.Request) (*liveroom.ResponseData, error) ]
+    - 直播间流量来源报表 [ FlowCategoryGet(clt *core.SDKClient, accessToken string, req *liveroom.Request) (*liveroom.ResponseData, error) ]
+    - 直播间商品分析报表 [ ProductGet(clt *core.SDKClient, accessToken string, req *liveroom.Request) (*liveroom.ResponseData, error) ]
+    - 直播受众分析报表 [ AudiencePortraitGet(clt *core.SDKClient, accessToken string, req *liveroom.Request) (*liveroom.ResponseData, error) ]
+  - 异步数据报表 (api/report/asynctask)
+    - 创建异步任务 [ Create(clt *core.SDKClient, accessToken string, req *asynctask.CreateRequest) (*asynctask.Task, error) ]
+    - 获取异步任务列表 [ Get(clt *core.SDKClient, accessToken string, req *asynctask.GetRequest) (*asynctask.GetResponseData, error) ]
+    - 下载任务结果 [ Download(clt *core.SDKClient, accessToken string, req *asynctask.DownloadRequest) ([]byte, error) ]
+- DMP 人群管理 (api/dmp)
+  - 数据源文件上传 [ datasource.FileUpload(clt *core.SDKClient, accessToken string, req *datasource.FileUploadRequest) (string, error) ]
+  - 数据源创建 [ datasource.Create(clt *core.SDKClient, accessToken string, req *datasource.CreateRequest) (string, error) ]
+  - 数据源更新 [ datasource.Update(clt *core.SDKClient, accessToken string, req *datasource.UpdateRequest) error ]
+  - 数据源详细信息 [ datasource.Read(clt *core.SDKClient, accessToken string, req *datasource.ReadRequest) ([]datasource.DataSource, error) ]
+  - 人群包列表 [ customaudience.Select(clt *core.SDKClient, accessToken string, req *customaudience.SelectRequest) (*customaudience.SelectResponseData, error) ]
+  - 人群包详细信息 [ customaudience.Read(clt *core.SDKClient, accessToken string, req *customaudience.ReadRequest) ([]customaudience.CustomAudience, error) ]
+  - 发布人群包 [ customaudience.Publish(clt *core.SDKClient, accessToken string, req *customaudience.PublishRequest) error ]
+  - 推送人群包 [ customaudience.Push(clt *core.SDKClient, accessToken string, req *customaudience.PushRequest) error ]
+  - 删除人群包 [ customaudience.Delete(clt *core.SDKClient, accessToken string, req *customaudience.DeleteRequest) error ]
+- 搜索广告
+  - 广告组 [ campaign.Create(clt *core.SDKClient, accessToken string, req *campaign.CreateRequest) (uint64, error) ]
+  - 关键词管理 (api/keyword)
+    - 获取关键词列表 [ Get(clt *core.SDKClient, accessToken string, req *keyword.GetRequest) ([]keyword.Keyword, error) ]
+    - 创建关键词 [ Create(clt *core.SDKClient, accessToken string, req *keyword.CreateRequest) (*keyword.ResponseData, error) ]
+    - 更新关键词 [ Update(clt *core.SDKClient, accessToken string, req *keyword.UpdateRequest) (*keyword.ResponseData, error) ]
+    - 删除关键词 [ Delete(clt *core.SDKClient, accessToken string, req *keyword.DeleteRequest) (*keyword.ResponseData, error) ]
+    - 搜索快投关键词推荐 [ Suggest(clt *core.SDKClient, accessToken string, req *keyword.SuggestRequest) ([]keyword.SuggestKeyword, error) ]
+  - 否定词管理 (api/privativeword)
+    - 批量新增计划否定词 [ AdAdd(clt *core.SDKClient, accessToken string, req *privativeword.AdAddRequest) (*privativeword.AdAddResponseData, error) ]
+    - 设置计划否定词 [ AdUpdate(clt *core.SDKClient, accessToken string, req *privativeword.AdUpdateRequest) (uint64, error) ]
+    - 批量新增组否定词 [ CampaignAdd(clt *core.SDKClient, accessToken string, req *privativeword.CampaignAddRequest) (*privativeword.CampaignAddResponseData, error) ]
+    - 设置组否定词 [ CampaignUpdate(clt *core.SDKClient, accessToken string, req *privativeword.AdUpdateRequest) (uint64, error) ]
+    - 获取否定词列表 [ Get(clt *core.SDKClient, accessToken string, req *privativeword.GetRequest) (*privativeword.GetResponseData, error) ]
+- 巨量星图 (api/star)
+  - 获取星图客户任务列表 [ DemandList(clt *core.SDKClient, accessToken string, req *star.DemandListRequest) (*star.DemandListResponseData, error) ]
+  - 获取星图客户任务订单列表 [ DemandOrderList(clt *core.SDKClient, accessToken string, req *star.DemandOrderListRequest) (*star.DemandOrderListResponseData, error) ]
+  - 获取订单投后分析报表 [ ReportOrderOverviewGet(clt *core.SDKClient, accessToken string, req *star.ReportOrderOverviewGetRequest) (*star.ReportOrderOverviewGetResponseData, error) ]
+  - 获取订单投后受众报表 [ ReportOrderUserDistributionGet(clt *core.SDKClient, accessToken string, req *star.ReportOrderUserDistributionGetRequest) (*star.ReportOrderUserDistributionGetResponseData, error) ]
+  - 获取星图订单投后线索 [ ClueList(clt *core.SDKClient, accessToken string, req *star.ClueListRequest) (*star.ClueListResponseData, error) ]
+- 素材管理 (api/file)
+  - 上传广告主图片 [ ImageAdvertiser(clt *core.SDKClient, accessToken string, req *file.ImageAdvertiserRequest) (*file.Image, error) ]
+  - 上传广告图片 [ ImageAd(clt *core.SDKClient, accessToken string, req *file.ImageAdRequest) (*file.Image, error) ]
+  - 上传视频 [ VideoAd(clt *core.SDKClient, accessToken string, req *file.VideoAdRequest) (*file.Video, error) ]
+  - 获取图片素材 [ ImageGet(clt *core.SDKClient, accessToken string, req *file.ImageGetRequest) (*file.ImageGetResponseData, error) ]
+  - 获取视频素材 [ VideoGet(clt *core.SDKClient, accessToken string, req *file.VideoGetRequest) (*file.VideoGetResponseData, error) ]
+  - 获取视频智能封面 [ VideoCoverSuggest(clt *core.SDKClient, accessToken string, req *file.VideoCoverSuggestRequest) (*file.VideoCoverSuggestResponseData, error) ]
+  - 获取同主体下广告主图片素材 [ ImageAdGet(clt *core.SDKClient, accessToken string, req *file.ImageAdGetRequest) ([]file.Image, error) ]
+  - 获取同主体下广告主视频素材 [ VideoAdGet(clt *core.SDKClient, accessToken string, req *file.VideoAdGetRequest) ([]file.Video, error) ]
+  - 素材推送 [ MaterialBind(clt *core.SDKClient, accessToken string, req *file.MaterialBindRequest) ([]file.FailedMaterialBind, error) ]
+  - 批量删除视频素材 [ VideoDelete(clt *core.SDKClient, accessToken string, req *file.VideoDeleteRequest) ([]string, error) ]
+  - 更新视频 [ VideoUpdate(clt *core.SDKClient, accessToken string, req *file.VideoUpdateRequest) ([]file.VideoForUpdate, error) ]
+- 建站管理
+  - 橙子建站落地页管理 (tools/site)
+    - 创建橙子建站站点 [ Create(clt *core.SDKClient, accessToken string, req *site.CreateRequest) (uint64, error) ]
+    - 修改橙子建站站点 [ Update(clt *core.SDKClient, accessToken string, req *site.UpdateRequest) error ]
+    - 更改橙子建站站点状态 [ UpdateStatus(clt *core.SDKClient, accessToken string, req *site.UpdateStatusRequest) (*site.UpdateStatusResponseData, error) ]
+    - 获取橙子建站站点预览地址 [ Preview(clt *core.SDKClient, accessToken string, req *site.PreviewRequest) (string, error) ]
+    - 获取橙子建站站点详细信息 [ Read(clt *core.SDKClient, accessToken string, req *site.ReadRequest) (*site.SiteDetail, error) ]
+    - 获取橙子建站站点列表 [ Get(clt *core.SDKClient, accessToken string, req *site.GetRequest) (*site.GetResponseData, error) ]
+    - 建站工具——查询已有智能电话 [ tools/clue.SmartPhoneGet(clt *core.SDKClient, accessToken string, req *clue.SmartPhoneGetRequest) (*clue.SmartPhoneGetResponseData, error)  ]
+    - 建站工具——查询已有表单列表 [ tools/clue.FormGet(clt *core.SDKClient, accessToken string, req *clue.FormGetRequest) (*clue.FormGetResponseData, error) ]
+    - 建站工具——查询表单详情 [ tools/clue.FormDetail(clt *core.SDKClient, accessToken string, req *clue.FormDetailRequest) (*clue.FormDetail, error) ]
+    - 获取落地页预约表单信息 [ FormsList(clt *core.SDKClient, accessToken string, req *site.FormsListRequest) ([]site.Form, error) ]
+    - 建站工具-建站转赠 [ Handsel(clt *core.SDKClient, accessToken string, req *site.HandselRequest) (*site.HandselResponseData, error) ]
+    - 建站工具-建站复制 [ Copy(clt *core.SDKClient, accessToken string, req *site.CopyRequest) (*site.CopyResponseData, error) ]
+  - 第三方落地页管理 (tools/thirdsite)
+    - 获取第三方落地页站点列表 [ Get(clt *core.SDKClient, accessToken string, req *thirdsite.GetRequest) (*thirdsite.GetResponseData, error) ]
+    - 创建第三方落地页站点 [ Create(clt *core.SDKClient, accessToken string, req *thirdsite.CreateRequest) (uint64, error) ]
+    - 修改第三方落地页站点 [ Update(clt *core.SDKClient, accessToken string, req *thirdsite.UpdateRequest) (uint64, error) ]
+    - 删除第三方落地页站点 [ Delete(clt *core.SDKClient, accessToken string, req *thirdsite.DeleteRequest) (uint64, error) ]
+    - 获取第三方落地页预览地址 [ Preview(clt *core.SDKClient, accessToken string, req *thirdsite.PreviewRequest) (*thirdsite.PreviewResponseData, error) ]
+  - 程序化落地页管理 (tools/landinggroup)
+    - 创建落地页组 [ Create(clt *core.SDKClient, accessToken string, req *landinggroup.CreateRequest) (*landinggroup.LandingGroup, error) ]
+    - 获取落地页组 [ Get(clt *core.SDKClient, accessToken string, req *landinggroup.GetRequest) (*landinggroup.GetResponseData, error) ]
+    - 更新落地页组站点状态 [ SiteOptStatusUpdate(clt *core.SDKClient, accessToken string, req *landinggroup.SiteOptStatusUpdateRequest) error ]
+    - 更新落地页组信息 [ Update(clt *core.SDKClient, accessToken string, req *landinggroup.UpdateRequest) (*landinggroup.LandingGroup, error) ]
+  - 橙子建站模版管理 (tools/sitetemplate)
+    - 基于站点创建模板 [ Create(clt *core.SDKClient, accessToken string, req *sitetemplate.CreateRequest) (*sitetemplate.Template, error) ]
+    - 基于模板创建站点 [ SiteCreate(clt *core.SDKClient, accessToken string, req *sitetemplate.SiteCreateRequest) (uint64, error) ]
+    - 获取站点模版列表 [ Get(clt *core.SDKClient, accessToken string, req *sitetemplate.GetRequest) (*sitetemplate.GetResponseData, error) ]
+    - 获取模版预览链接 [ Preview(clt *core.SDKClient, accessToken string, req *sitetemplate.PreviewRequest) (string, error) ]
+- 飞鱼线索管理 (tools/clue)
+  - 获取线索列表 [ Get(clt *core.SDKClient, accessToken string, req *clue.GetRequest) (*clue.GetResponseData, error) ]
+  - 回传有效线索 [ Callback(clt *core.SDKClient, accessToken string, req *clue.CallbackRequest) error ]
+  - 获取活动记录 [ KeyActionGet(clt *core.SDKClient, accessToken string, req *clue.KeyActionGetRequest) (*clue.KeyActionGetResponseData, error) ]
+- 青鸟线索通
+  - 线索通表单组件管理 (clue/form)
+    - 获取表单详情 [ Detail(clt *core.SDKClient, accessToken string, req *form.DetailRequest) (*form.Form, error) ]
+    - 获取表单列表 [ List(clt *core.SDKClient, accessToken string, req *form.ListRequest) (*form.ListResponseData, error) ]
+    - 创建表单 [ Create(clt *core.SDKClient, accessToken string, req *form.CreateRequest) (uint64, error) ]
+    - 更新表单 [ Update(clt *core.SDKClient, accessToken string, req *form.UpdateRequest) (uint64, error) ]
+    - 删除表单 [ Delete(clt *core.SDKClient, accessToken string, req *form.DeleteRequest) (bool, error) ]
+  - 线索通卡券组件管理 (clue/coupon)
+    - 创建卡券 [ Create(clt *core.SDKClient, accessToken string, req *coupon.CreateRequest) (uint64, error) ]
+    - 上传券码 [ CodeUpload(clt *core.SDKClient, accessToken string, req *coupon.CodeUploadRequest) (*coupon.CodeUploadResponseData, error) ]
+    - 获取卡券详情 [ Detail(clt *core.SDKClient, accessToken string, req *coupon.DetailRequest) (*coupon.DetailResponseData, error) ]
+    - 获取卡券列表 [ Get(clt *core.SDKClient, accessToken string, req *coupon.GetRequest) (*coupon.GetResponseData, error) ]
+    - 编辑卡券 [ Update(clt *core.SDKClient, accessToken string, req *coupon.UpdateRequest) error ]
+    - 查询券码记录 [ CodeGet(clt *core.SDKClient, accessToken string, req *coupon.CodeGetRequest) (*coupon.CodeGetResponseData, error) ]
+    - 核销券码 [ CodeConsume(clt *core.SDKClient, accessToken string, req *coupon.CodeConsumeRequest) error ]
+    - 查询核销员 [ EmployeeGet(clt *core.SDKClient, accessToken string, req *coupon.EmployeeGetRequest) (*coupon.EmployeeGetResponseData, error) ]
+    - 添加核销员 [ EmployeeCreate(clt *core.SDKClient, accessToken string, req *coupon.EmployeeCreateRequest) (*coupon.EmployeeCreateResponseData, error) ]
+    - 删除核销员 [ EmployeeDelete(clt *core.SDKClient, accessToken string, req *coupon.EmployeeDeleteRequest) error ]
+  - 线索通智能电话组件管理 (clue/smartphone)
+    - 创建智能电话 [ Create(clt *core.SDKClient, accessToken string, req *smartphone.CreateRequest) (*smartphone.CreateResponseData, error) ]
+    - 获取智能电话列表 [ Get(clt *core.SDKClient, accessToken string, req *smartphone.GetRequest) (*smartphone.GetResponseData, error) ]
+    - 删除智能电话 [ Delete(clt *core.SDKClient, accessToken string, req *smartphone.DeleteRequest) error ]
+    - 查询智能电话拨打记录 [ Record(clt *core.SDKClient, accessToken string, req *smartphone.RecordRequest) (*smartphone.RecordResponseData, error) ]
+- 资产
+  - 创意组件(api/assets/creativecomponent)
+    - 创建组件 [ Create(clt *core.SDKClient, accessToken string, req *creativecomponent.CreateRequest) (*creativecomponent.CreateResponseData, error) ]
+    - 更新组件 [ Update(clt *core.SDKClient, accessToken string, req *creativecomponent.UpdateRequest) (*creativecomponent.CreateResponseData, error) ]
+    - 查询组件列表 [ Get(clt *core.SDKClient, accessToken string, req *creativecomponent.GetRequest) (*creativecomponent.GetResponseData, error) ]
+  - 事件管理
+    - 获取推广内容 [ tools/event.AssetsGet(clt *core.SDKClient, accessToken string, req *event.AssetsGetRequest) (*event.AssetsGetResponseData, error) ]
+    - 获取优化目标 [ tools/event.ConvertOptimizedGoalGet(clt *core.SDKClient, accessToken string, req *event.ConvertOptimizedGoalGetRequest) (*event.ConvertOptimizedGoalGetResponseData, error) ]
+    - 创建事件 [ EventsCreate(clt *core.SDKClient, accessToken string, req *event.EventsCreateRequest) error ]
+    - 创建资产 [ AssetsCreate(clt *core.SDKClient, accessToken string, req *event.AssetsCreateRequest) (uint64, error) ]
+    - 获取可创建事件列表 [ AvailableEventsGet(clt *core.SDKClient, accessToken string, req *event.AvailableEventsGetRequest) ([]event.EventConfig, error) ]
+    - 获取已创建事件列表 [ EventConfigsGet(clt *core.SDKClient, accessToken string, req *event.EventConfigsGetRequest) ([]event.EventConfig, error) ]
+- 数据上报管理 (api/track)
+  - 转化回传 [ Active(req *track.ActiveRequest) error ]
+- 事件管理(api/conversion)
+  - 转化回传 [ Conversion(req *conversion.Request) error ]
+- 工具
+  - 查询工具
+    - 查询在投计划配额 [ tools.QuotaGet(clt *core.SDKClient, accessToken string, req *tools.QuotaGetRequest) (*tools.QuotaGetResult, error) ]
+    - 查询受众预估结果 [ tools.EstimateAudience(clt *core.SDKClient, accessToken string, req *tools.EstimateAudienceRequest) (*tools.EstimateAudienceResponseData, error) ]
+    - 建议日预算及预期成本 [ BidSuggest(clt *core.SDKClient, accessToken string, req *tools.BidSuggestRequest) (*tools.BidSuggest, error) ]
+    - 日志查询 [ tools/log.Search(clt *core.SDKClient, accessToken string, req *log.SearchRequest) (*log.SearchResponseData, error) ]
+    - 查询广告质量度 [ tools.AdQualityGet(clt *core.SDKClient, accessToken string, req *tools.AdQualityGetRequest) ([]tools.AdQuality, error) ]
+    - 查询广告计划学习期状态 [ tools.AdStatExtraInfoGet(clt *core.SDKClient, accessToken string, req *tools.AdStatExtraInfoGetRequest) ([]tools.AdStatExtraInfo, error) ]
+    - 获取广告预览二维码 [ tools/adpreview.QrcodeGet(clt *core.SDKClient, accessToken string, req *adpreview.QrcodeGetRequest) (*adpreview.QrcodeGetResponseData, error) ]
+    - 获取地域列表 [ tools.RegionGet(clt *core.SDKClient, accessToken string, req *tools.RegionGetRequest) ([]tools.Region, error) ]
+    - 获取行业列表 [ tools.IndustryGet(clt *core.SDKClient, accessToken string, req *tools.IndustryGetRequest) ([]tools.Industry, error) ]
+    - 行动号召字段内容获取 [ tools.ActionTextGet(clt *core.SDKClient, accessToken string, req *tools.ActionTextGetRequest) ([]string, error) ]
+    - 查询推广卡片推荐内容（新版） [ PromotionCardRecommendTitleGet(clt *core.SDKClient, accessToken string, req *tools.PromotionCardRecommendTitleGetRequest) ([]string, error) ]
+    - 获取预估点击成本 [ tools.EstimatedPriceGet(clt *core.SDKClient, accessToken string, req *tools.EstimatedPriceGetRequest) (*tools.EstimatedPrice, error) ]
+  - 抖音达人 (tools/aweme)
+    - 查询抖音帐号和类目信息 [ AwemeInfoSearch(clt *core.SDKClient, accessToken string, req *aweme.AwemeInfoSearchRequest) (*aweme.AwemeInfoSearchResult, error) ]
+    - 查询抖音类似帐号 [ AwemeSimilarAuthorSearch(clt *core.SDKClient, accessToken string, req *aweme.AwemeSimilarAuthorSearchRequest) ([]aweme.Author, error) ]
+    - 查询抖音类目列表 [ AwemeMultiLevelCategoryGet(clt *core.SDKClient, accessToken string, req *aweme.AwemeMultiLevelCategoryGetRequest) ([]aweme.Category, error) ]
+    - 查询抖音类目下的推荐达人 [ AwemeCategoryTopAuthorGet(clt *core.SDKClient, accessToken string, req *aweme.AwemeCategoryTopAuthorGetRequest) ([]aweme.Author, error) ]
+    - 查询抖音号id对应的达人信息 [ AwemeAuthorInfoGet(clt *core.SDKClient, accessToken string, req *aweme.AwemeAuthorInfoGetRequest) ([]aweme.Author, error) ]
+    - 查询授权直播抖音达人列表 [ LiveAuthorizeList(clt *core.SDKClient, accessToken string, req *aweme.LiveAuthorizeListRequest) (*aweme.LiveAuthorizeListResponseData, error) ]
+  - 获取计划诊断信息 (tools/diagnosis)
+    - 获取计划诊断建议 [ SuggestionGet(clt *core.SDKClient, accessToken string, req *diagnosis.SuggestionGetRequest) (*diagnosis.SuggestionGetResponseData, error) ]
+    - 采纳计划诊断建议 [ SuggestionAccept(clt *core.SDKClient, accessToken string, req *diagnosis.SuggestionAcceptRequest) (*diagnosis.SuggestionAcceptResponseData, error) ]
+  - 行为兴趣词管理 (tools/interestaction)
+    - 行为类目查询 [ ActionCategory(clt *core.SDKClient, accessToken string, req *interestaction.ActionCategoryRequest) ([]interestaction.Object, error) ]
+    - 行为关键词查询 [ ActionKeyword(clt *core.SDKClient, accessToken string, req *interestaction.ActionKeywordRequest) ([]interestaction.Object, error) ]
+    - 兴趣类目查询 [ InterestCategory(clt *core.SDKClient, accessToken string, req *interestaction.InterestCategoryRequest) ([]interestaction.Object, error) ]
+    - 兴趣关键词查询 [ InterestKeyword(clt *core.SDKClient, accessToken string, req *interestaction.InterestKeywordRequest) ([]interestaction.Object, error) ]
+    - 兴趣行为类目关键词ID转词 [ Id2Word(clt *core.SDKClient, accessToken string, req *interestaction.Id2WordRequest) (*interestaction.Id2WordResponseData, error) ]
+    - 获取行为兴趣推荐关键词 [ KeywordSuggest(clt *core.SDKClient, accessToken string, req *interestaction.KeywordSuggestRequest) ([]interestaction.Object, error) ]
+  - 动态创意词包管理 (tools/creativeword)
+    - 创建动态创意词包 [ Create(clt *core.SDKClient, accessToken string, req *creativeword.CreateRequest) (uint64, error) ]
+    - 查询动态创意词包 [ Select(clt *core.SDKClient, accessToken string, req *creativeword.SelectRequest) ([]creativeword.CreativeWord, error) ]
+    - 更新动态创意词包 [ Update(clt *core.SDKClient, accessToken string, req *creativeword.UpdateRequest) (uint64, error) ]
+    - 删除动态创意词包 [ Delete(clt *core.SDKClient, accessToken string, req *creativeword.DeleteRequest) (uint64, error) ]
+  - 转化目标管理 (tools/adconvert)
+    - 创建转化目标 [ Create(clt *core.SDKClient, accessToken string, req *adconvert.CreateRequest) (*adconvert.Convert, error) ]
+    - 转化目标列表 [ Select(clt *core.SDKClient, accessToken string, req *adconvert.SelectRequest) (*adconvert.SelectResponseData, error) ]
+    - 查询转化目标详细信息 [ Read(clt *core.SDKClient, accessToken string, req *adconvert.ReadRequest) (*adconvert.Convert, error) ]
+    - 更新转化目标操作状态 [ UpdateStatus(clt *core.SDKClient, accessToken string, req *adconvert.UpdateStatusRequest) error ]
+    - 查询广告计划可用转化目标 [ Query(clt *core.SDKClient, accessToken string, req *adconvert.QueryRequest) ([]adconvert.AdConvert, error) ]
+    - 查询广告计划可用优化目标 [ OptimizeTargetGet(clt *core.SDKClient, accessToken string, req *adconvert.OptimizeTargetGetRequest) ([]adconvert.OptimizeTarget, error) ]
+    - 转化目标推送 [ Push(clt *core.SDKClient, accessToken string, req *adconvert.PushRequest) error ]
+    - 查询深度优化方式 [ DeepbidRead(clt *core.SDKClient, accessToken string, req *adconvert.DeepbidReadRequest) ([]enum.DeepBidType, error) ]
+    - 修改转化监测链接 [ TrackURLUpdateStatus(clt *core.SDKClient, accessToken string, req *adconvert.TrackURLUpdateRequest) error ]
+  - 定向包管理 (audiencepackage)
+    - 获取定向包 [ Get(clt *core.SDKClient, accessToken string, req *audiencepackage.GetRequest) (*audiencepackage.GetResponseData, error) ]
+    - 创建定向包 [ Create(clt *core.SDKClient, accessToken string, req *audiencepackage.CreateRequest) (uint64, error) ]
+    - 更新定向包 [ Update(clt *core.SDKClient, accessToken string, req *audiencepackage.UpdateRequest) (uint64, error) ]
+    - 删除定向包 [ Delete(clt *core.SDKClient, accessToken string, req *audiencepackage.DeleteRequest) (uint64, error) ]
+    - 计划绑定定向包 [ AdBind(clt *core.SDKClient, accessToken string, req *audiencepackage.AdBindRequest) (uint64, error) ]
+    - 定向包解绑 [ AdUnbind(clt *core.SDKClient, accessToken string, req *audiencepackage.AdBindRequest) (uint64, error) ]
+  - 一键起量管理 (tools/adraise)
+    - 启动一键起量 [ Set(clt *core.SDKClient, accessToken string, req *adraise.SetRequest) (enum.AdRaiseStatus, error) ]
+    - 获取当前起量预估值 [ Estimate(clt *core.SDKClient, accessToken string, req *adraise.EstimateRequest) (int64, error) ]
+    - 获取当前起量状态 [ Status(clt *core.SDKClient, accessToken string, req *adraise.StatusRequest) (map[uint64]enum.AdRaiseStatus, error) ]
+    - 获取起量的后验数据 [ Result(clt *core.SDKClient, accessToken string, req *adraise.ResultRequest) (*adraise.Result, error) ]
+    - 获取一键起量报告 [ Report(clt *core.SDKClient, accessToken string, req *adraise.ReportRequest) (*adraise.ReportResponseData, error) ]
+    - 获取起量版本信息 [ Version(clt *core.SDKClient, accessToken string, req *adraise.VersionRequest) (*adraise.VersionResponseData, error) ]
+  - 评论管理 (tools/comment)
+    - 获取评论列表 [ Get(clt *core.SDKClient, accessToken string, req *comment.GetRequest) (*comment.GetResponseData, error) ]
+    - 获取评论回复列表 [ ReplyGet(clt *core.SDKClient, accessToken string, req *comment.ReplyGetRequest) (*comment.ReplyGetResponseData, error) ]
+    - 评论操作 [ Operate(clt *core.SDKClient, accessToken string, req *comment.OperateRequest) (*comment.OperateResponseData, error) ]
+    - 获取屏蔽词列表 [ TermsBandedGet(clt *core.SDKClient, accessToken string, req *comment.TermsBandedGetRequest) (*comment.TermsBandedGetResponseData, error) ]
+    - 添加屏蔽词 [ TermsBandedAdd(clt *core.SDKClient, accessToken string, req *comment.TermsBandedAddRequest) error ]
+    - 更新屏蔽词 [ TermsBandedUpdate(clt *core.SDKClient, accessToken string, req *comment.TermsBandedUpdateRequest) error ]
+    - 删除屏蔽词 [ TermsBandedDelete(clt *core.SDKClient, accessToken string, req *comment.TermsBandedDeleteRequest) error ]
+    - 获取屏蔽用户列表 [ AwemeBandedList(clt *core.SDKClient, accessToken string, req *comment.AwemeBandedListRequest) (*comment.AwemeBandedListResponseData, error) ]
+    - 添加屏蔽用户 [ AwemeBandedCreate(clt *core.SDKClient, accessToken string, req *comment.AwemeBandedCreateRequest) (*comment.AwemeBandedCreateResponseData, error) ]
+    - 删除屏蔽用户 [ AwemeBandedDelete(clt *core.SDKClient, accessToken string, req *comment.AwemeBandedCreateRequest) (*comment.AwemeBandedCreateResponseData, error) ]
+  - 地域信息管理
+    - 查询国家/区域信息 [ tools.CountryInfo(clt *core.SDKClient, accessToken string, req *tools.CountryInfoRequest) (*tools.CountryInfoResponseData, error) ]
+    - 获取行政信息 [ tools.AdminInfo(clt *core.SDKClient, accessToken string, req *tools.AdminInfoRequest) (*tools.AdminInfoResponseData, error) ]
