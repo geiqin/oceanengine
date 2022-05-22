@@ -3,9 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="cc305c43-cf48-4187-9a70-c1d7634295db" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/marketing-api/model/qianchuan/campaign/campaign.go" beforeDir="false" afterPath="$PROJECT_DIR$/marketing-api/model/qianchuan/campaign/campaign.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/marketing-api/model/qianchuan/campaign/create.go" beforeDir="false" afterPath="$PROJECT_DIR$/marketing-api/model/qianchuan/campaign/create.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/marketing-api/model/qianchuan/campaign/list_get.go" beforeDir="false" afterPath="$PROJECT_DIR$/marketing-api/model/qianchuan/campaign/list_get.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/marketing-api/model/qianchuan/report/metrics.go" beforeDir="false" afterPath="$PROJECT_DIR$/marketing-api/model/qianchuan/report/metrics.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

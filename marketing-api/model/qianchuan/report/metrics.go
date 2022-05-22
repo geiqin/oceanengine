@@ -41,9 +41,9 @@ type Metrics struct {
 	// ConvertCnt 转化数
 	ConvertCnt int64 `json:"convert_cnt,omitempty"`
 	// ConversionCost 转化成本
-	ConversionCost float64 `json:"conversion_cost,omitempty"`
+	ConvertCost float64 `json:"convert_cost,omitempty"`
 	// ConversionRate 转化率
-	ConversionRate float64 `json:"conversion_rate,omitempty"`
+	ConvertRate float64 `json:"convert_rate,omitempty"`
 	// DyFollow 新增关注数
 	DyFollow int64 `json:"dy_follow,omitempty"`
 	// DyLike 点赞数
