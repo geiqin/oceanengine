@@ -53,7 +53,7 @@ type Metrics struct {
 	// DyShare 分享数
 	DyShare int64 `json:"dy_share,omitempty"`
 	// LivePayOrderCostPerOrder 成交客单价。短视频带货：VIDEO_PROM_GOODS 不支持该指标
-	LivePayOrderCostPerOrder int64 `json:"live_pay_order_cost_per_order,omitempty"`
+	LivePayOrderCostPerOrder float64 `json:"live_pay_order_cost_per_order,omitempty"`
 	// LubanLiveEnterCnt 直播间观看人次。短视频带货：VIDEO_PROM_GOODS 不支持该指标
 	LubanLiveEnterCnt int64 `json:"luban_live_enter_cnt,omitempty"`
 	// LiveWatchOneMinuteCount 直播间超过1分钟观看人次。短视频带货：VIDEO_PROM_GOODS 不支持该指标
