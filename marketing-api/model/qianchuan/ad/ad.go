@@ -25,7 +25,7 @@ type Ad struct {
 	// AdCreateTime 计划创建时间
 	AdCreateTime string `json:"ad_create_time,omitempty"`
 	// AdModifyTime 计划修改时间
-	AdModityTime string `json:"ad_modity_time,omitempty"`
+	AdModifyTime string `json:"ad_modify_time,omitempty"`
 	// AwemeInfo 计划中关联的抖音号信息
 	AwemeInfo []AwemeInfo `json:"aweme_info,omitempty"`
 	// ProductInfo 商品列表
